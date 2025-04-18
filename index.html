@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        #displayContainer{
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Search By Names</h1>
+    <input type="text" id="name-input" />
+    <div id="displayContainer"></div>
+  </body>
+</html>
+<script>
+  let container = document.getElementById("displayContainer");
+  let inputSearch = document.getElementById("name-input");
+
+  let pokemons;
+       
+let timer;
+  inputSearch.addEventListener("input", (e) => {
+    let inputValue = e.target.value;
+
+    if (inputValue === "") {
+      container.innerHTML = "";
+      return;
+    }
+
+    let filterByName = pokemons.filter((ele) => ele.name.includes(inputValue));
+
+    clearTimeout(timer)
+      timer= setTimeout(()=>{
+        console.log('api called')
+        displayData(filterByName);
+
+       
+       },1000)
+  });
+
+  async function fetchData() {
+    let respone = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
+    let data = await respone.json();
+    pokemons = data.results;
+    // console.log(pokemons);
+  }
+  fetchData();
+
+  function displayData(extractedData) {
+    container.innerHTML = "";
+
+    extractedData.length === 0
+      ? (container.innerHTML = `<p>Not found</P`)
+      : extractedData.forEach((pokemon) => {
+          let pokemonCard = document.createElement("div");
+          pokemonCard.className = "pokemon-card";
+          pokemonCard.setAttribute("data-url", pokemon.url);
+          pokemonCard.innerHTML = `
+        <h3>${pokemon.name}</h3>
+        `;
+
+          container.appendChild(pokemonCard);
+        });
+  }
+
+  container.addEventListener("click", async (e) => {
+    let currentCard = e.target.closest(".pokemon-card");
+
+    if (currentCard) {
+      let getUrl = currentCard.getAttribute("data-url");
+      if (getUrl) {
+        let respone = await fetch(getUrl);
+        let data = await respone.json();
+        alert('data logged in console')
+        console.log(data);
+      }
+    }
+  });
+</script>
