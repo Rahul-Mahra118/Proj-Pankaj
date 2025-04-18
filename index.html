@@ -24,7 +24,7 @@
        
 let timer;
   inputSearch.addEventListener("input", (e) => {
-    let inputValue = e.target.value;
+    let inputValue = e.target.value.toLowerCase();
 
     if (inputValue === "") {
       container.innerHTML = "";
