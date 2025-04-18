@@ -15,6 +15,7 @@
     <input type="text" id="name-input" />
     <div id="displayContainer"></div>
   </body>
+  
 </html>
 <script>
   let container = document.getElementById("displayContainer");
@@ -41,30 +42,45 @@
       displayData(filterByName);
     }, 1000);
   });
-
+ let imagesData;
   async function fetchData() {
     let respone = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
     let data = await respone.json();
     pokemons = data.results;
-    // console.log(pokemons);
+   
+  imagesData=  pokemons.map(async(pokemon)=>{
+    let response2= await fetch(pokemon.url);
+    let data2= await response2.json();
+    let image= data2.sprites.back_default;
+    return {
+      ...pokemon,
+      image:image
+    }
+ 
+  })
+  console.log(imagesData)
+    
   }
   fetchData();
 
-  function displayData(extractedData) {
+  function displayData(imagesData) {
     container.innerHTML = "";
 
-    extractedData.length === 0
+    imagesData.length === 0
       ? (container.innerHTML = `<p>Not found</P`)
-      : extractedData.forEach((pokemon) => {
+      : imagesData.forEach((pokemon) => {
           let pokemonCard = document.createElement("div");
           pokemonCard.className = "pokemon-card";
           pokemonCard.setAttribute("data-url", pokemon.url);
-          pokemonCard.innerHTML = `
+    
+         pokemonCard.innerHTML = `
         <h3>${pokemon.name}</h3>
+        <img src=${pokemon.image} />
         `;
 
           container.appendChild(pokemonCard);
-        });
+          }
+        );
   }
 
   container.addEventListener("click", async (e) => {
@@ -75,10 +91,11 @@
       if (getUrl) {
         let respone = await fetch(getUrl);
         let data = await respone.json();
-        container.innerHTML = null;
+        container.innerHTML = '';
         alert("data logged in console");
-        console.log(data);
+        // console.log(data.sprites.back_default);
       }
     }
   });
+
 </script>
