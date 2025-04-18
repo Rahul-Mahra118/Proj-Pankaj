@@ -42,28 +42,38 @@
       displayData(filterByName);
     }, 1000);
   });
- let imagesData;
+  
+ let imagesData=[];
+
+ async function fetchImages(url) {
+  let response2=  await fetch(url);
+    let data2= await response2.json();
+    let image= data2.sprites.back_default ||
+    data2.sprites.front_default ||'';
+      return image;
+ }
   async function fetchData() {
-    let respone = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
+    let respone = await fetch("https://pokeapi.co/api/v2/pokemon?limit=100");
     let data = await respone.json();
     pokemons = data.results;
    
-  imagesData=  pokemons.map(async(pokemon)=>{
-    let response2= await fetch(pokemon.url);
-    let data2= await response2.json();
-    let image= data2.sprites.back_default;
-    return {
-      ...pokemon,
-      image:image
-    }
- 
-  })
+   for(let pokemon of pokemons){
+      let image= await fetchImages(pokemon.url)
+     if(image){
+      imagesData.push({
+        ...pokemon,
+        image:image
+      })
+     }
+
+   }
   console.log(imagesData)
+  displayData() ;
     
   }
   fetchData();
 
-  function displayData(imagesData) {
+  function displayData() {
     container.innerHTML = "";
 
     imagesData.length === 0
