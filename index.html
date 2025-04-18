@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        #displayContainer{
-            cursor: pointer;
-        }
+      #displayContainer {
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -21,8 +21,8 @@
   let inputSearch = document.getElementById("name-input");
 
   let pokemons;
-       
-let timer;
+
+  let timer;
   inputSearch.addEventListener("input", (e) => {
     let inputValue = e.target.value.toLowerCase();
 
@@ -31,15 +31,15 @@ let timer;
       return;
     }
 
-    let filterByName = pokemons.filter((ele) => ele.name.includes(inputValue));
+    let filterByName = pokemons.filter((ele) =>
+      ele.name.toLowerCase().includes(inputValue)
+    );
 
-    clearTimeout(timer)
-      timer= setTimeout(()=>{
-        console.log('api called')
-        displayData(filterByName);
-
-       
-       },1000)
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      console.log("api called");
+      displayData(filterByName);
+    }, 1000);
   });
 
   async function fetchData() {
@@ -75,7 +75,8 @@ let timer;
       if (getUrl) {
         let respone = await fetch(getUrl);
         let data = await respone.json();
-        alert('data logged in console')
+        container.innerHTML = null;
+        alert("data logged in console");
         console.log(data);
       }
     }
