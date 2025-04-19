@@ -30,24 +30,7 @@
   let pokemons;
 
   let timer;
-  inputSearch.addEventListener("input", (e) => {
-    let inputValue = e.target.value.toLowerCase();
-
-    if (inputValue === "") {
-      container.innerHTML = "";
-      return;
-    }
-
-    let filterByName = pokemons.filter((ele) =>
-      ele.name.toLowerCase().includes(inputValue)
-    );
-
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      console.log("api called");
-      displayData(filterByName);
-    }, 1000);
-  });
+ 
   
  let imagesData=[];
 
@@ -74,17 +57,38 @@
 
    }
   // console.log(imagesData)
-  displayData() ;
+  // displayData() ;
     
   }
   fetchData();
 
-  function displayData() {
+  inputSearch.addEventListener("input", (e) => {
+    let inputValue = e.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      container.innerHTML = "";
+      return;
+    }
+
+    let filterByName = imagesData.filter((ele) =>
+      ele.name.toLowerCase().includes(inputValue)
+    );
+
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      console.log("api called");
+      displayData(filterByName);
+    }, 1000);
+
+   
+  });
+
+  function displayData(filterByName) {
     container.innerHTML = "";
 
-    imagesData.length === 0
+    filterByName.length === 0
       ? (container.innerHTML = `<p>Not found</P`)
-      : imagesData.forEach((pokemon) => {
+      : filterByName.forEach((pokemon) => {
           let pokemonCard = document.createElement("div");
           pokemonCard.className = "pokemon-card";
           pokemonCard.setAttribute("data-url", pokemon.url);
