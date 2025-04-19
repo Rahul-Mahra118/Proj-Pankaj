@@ -56,6 +56,8 @@
 
   inputSearch.addEventListener("input", (e) => {
     let inputValue = e.target.value.toLowerCase();
+    clearTimeout(timer);
+   
 
     if (inputValue === "") {
       container.innerHTML = "";
@@ -66,12 +68,12 @@
       ele.name.toLowerCase().includes(inputValue)
     );
 
-    clearTimeout(timer);
     timer = setTimeout(() => {
       console.log("api called");
-      //calling display data here.
       displayData(filterByName);
     }, 1000);
+
+  
   });
 
   function displayData(filterByName) {
@@ -83,7 +85,7 @@
           let pokemonCard = document.createElement("div");
           pokemonCard.className = "pokemon-card";
           pokemonCard.setAttribute("data-url", pokemon.url);
-         
+
           pokemonCard.innerHTML = ` 
           <h3>${pokemon.name}</h3>
          <img src=${pokemon.image} />
@@ -96,16 +98,18 @@
 
   container.addEventListener("click", async (e) => {
     let currentCard = e.target.closest(".pokemon-card");
-
+    container.innerHTML = "";
     if (currentCard) {
       let getUrl = currentCard.getAttribute("data-url");
       if (getUrl) {
         let respone = await fetch(getUrl);
         let data = await respone.json();
         // we stringify because browser doesnot understand the object unlike js
-        let stringiFydata= JSON.stringify(data)
-        localStorage.setItem('pokemonData',stringiFydata);
-        window.open('pokemonData.html', '_blank');
+        let stringiFydata = JSON.stringify(data);
+        localStorage.setItem("pokemonData", stringiFydata);
+        window.open("pokemonData.html", "_blank");
+        container.innerHTML = '';
+        inputValue='';
       }
     }
   });
