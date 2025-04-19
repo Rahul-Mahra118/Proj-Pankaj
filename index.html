@@ -8,20 +8,18 @@
       #displayContainer {
         cursor: pointer;
       }
-      .pokemon-card{
+      .pokemon-card {
         display: flex;
-        gap:10px;
-        
-        align-items: center;
+        gap: 10px;
+        /* align-items: center; */
       }
     </style>
   </head>
   <body>
-    <h1 >Search By Names</h1>
+    <h1>Search By Names</h1>
     <input type="text" id="name-input" />
     <div id="displayContainer"></div>
   </body>
-  
 </html>
 <script>
   let container = document.getElementById("displayContainer");
@@ -30,35 +28,29 @@
   let pokemons;
 
   let timer;
- 
-  
- let imagesData=[];
 
- async function fetchImages(url) {
-  let response2=  await fetch(url);
-    let data2= await response2.json();
-    let image= data2.sprites.back_default ||
-    data2.sprites.front_default ||'';
-      return image;
- }
+  let imagesData = [];
+
+  async function fetchImages(url) {
+    let response2 = await fetch(url);
+    let data2 = await response2.json();
+    let image = data2.sprites.back_default || data2.sprites.front_default || "";
+    return image;
+  }
   async function fetchData() {
     let respone = await fetch("https://pokeapi.co/api/v2/pokemon?limit=100");
     let data = await respone.json();
     pokemons = data.results;
-   
-   for(let pokemon of pokemons){
-      let image= await fetchImages(pokemon.url)
-     if(image){
-      imagesData.push({
-        ...pokemon,
-        image:image
-      })
-     }
 
-   }
-  // console.log(imagesData)
-  // displayData() ;
-    
+    for (let pokemon of pokemons) {
+      let image = await fetchImages(pokemon.url);
+      if (image) {
+        imagesData.push({
+          ...pokemon,
+          image: image,
+        });
+      }
+    }
   }
   fetchData();
 
@@ -77,10 +69,9 @@
     clearTimeout(timer);
     timer = setTimeout(() => {
       console.log("api called");
+      //calling display data here.
       displayData(filterByName);
     }, 1000);
-
-   
   });
 
   function displayData(filterByName) {
@@ -92,15 +83,15 @@
           let pokemonCard = document.createElement("div");
           pokemonCard.className = "pokemon-card";
           pokemonCard.setAttribute("data-url", pokemon.url);
-    
-         pokemonCard.innerHTML = `
-        <h3>${pokemon.name}</h3>
-        <img src=${pokemon.image} />
+         
+          pokemonCard.innerHTML = ` 
+          <h3>${pokemon.name}</h3>
+         <img src=${pokemon.image} />
+        
         `;
 
           container.appendChild(pokemonCard);
-          }
-        );
+        });
   }
 
   container.addEventListener("click", async (e) => {
@@ -111,11 +102,11 @@
       if (getUrl) {
         let respone = await fetch(getUrl);
         let data = await respone.json();
-        container.innerHTML = '';
-        alert("data logged in console");
-        console.log(data)
+        // we stringify because browser doesnot understand the object unlike js
+        let stringiFydata= JSON.stringify(data)
+        localStorage.setItem('pokemonData',stringiFydata);
+        window.open('pokemonData.html', '_blank');
       }
     }
   });
-
 </script>

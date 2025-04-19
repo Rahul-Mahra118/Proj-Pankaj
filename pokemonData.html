@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="pokemonName"></h1>
+    <div id="displayData"></div>
+</body>
+</html>
+<script>
+    let heading= document.getElementById('pokemonName');
+    let container = document.getElementById('displayData');
+
+   async function fetchData() {
+    let data= await JSON.parse (localStorage.getItem(('pokemonData')));
+    console.log(data);
+
+    container.innerHTML=`
+    <h1>${data.name}</h1>
+    <img src='${data.sprites.back_default || data.sprites.back_female||'not avaiable'}'/>
+    `
+   }
+   fetchData()
+</script>
